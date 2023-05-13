@@ -61,7 +61,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(service.authenticate(request));
         }
         catch (Exception e){
-            logger.error(e.getMessage());
+            CUSTOM_LOGGER.error("[Log in] "+e.getMessage());
             return ResponseEntity.status(403).build();
         }
     }
