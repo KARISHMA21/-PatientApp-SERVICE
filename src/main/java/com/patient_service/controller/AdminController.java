@@ -1,5 +1,6 @@
 package com.patient_service.controller;
 
+import com.patient_service.PatientServiceApplication;
 import com.patient_service.bean.model.ListFinalRecord;
 import com.patient_service.bean.model.MinorAccounts;
 import com.patient_service.bean.model.UpdatedProfile;
@@ -9,6 +10,8 @@ import com.patient_service.service.serviceinteface.GetMedicalRecordsService;
 import com.patient_service.service.serviceinteface.GetMinorsService;
 import com.patient_service.service.serviceinteface.PatientAccountService;
 import com.patient_service.service.serviceinteface.PatientProfileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +24,7 @@ import java.util.List;
 @RequestMapping("/api/v1/admin")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 public class AdminController {
-
+    Logger logger= LoggerFactory.getLogger(PatientServiceApplication.class);
     GetMedicalRecordsService getMedicalRecordsService;
     GetMinorsService getMinorsService;
 

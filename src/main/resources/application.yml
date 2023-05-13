@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: MedWeb
+
+  profiles:
+    active: prod
+
+
+#logging:
+#  file: C:/Users/basan/Desktop/logs/elk-stack.log

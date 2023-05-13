@@ -10,6 +10,8 @@ import com.patient_service.security.service.JwtService;
 import com.patient_service.service.serviceinteface.OTPservice;
 import com.patient_service.service.serviceinteface.PatientAccountService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
+    Logger logger= LoggerFactory.getLogger(AuthenticationController.class);
+    private static final Logger CUSTOM_LOGGER = LoggerFactory.getLogger("CustomLogger");
 
     private final AuthenticationService service;
 
@@ -52,9 +56,12 @@ public class AuthenticationController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         try {
+//            logger.info("[Log in] "+request.getUsername());
+            CUSTOM_LOGGER.info("[Log in] "+request.getUsername());
             return ResponseEntity.ok(service.authenticate(request));
         }
         catch (Exception e){
+            logger.error(e.getMessage());
             return ResponseEntity.status(403).build();
         }
     }

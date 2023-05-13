@@ -1,5 +1,6 @@
 package com.patient_service.controller;
 
+import com.patient_service.PatientServiceApplication;
 import com.patient_service.bean.model.ConsentActionRequestBody;
 import com.patient_service.bean.model.ConsentLogModel;
 import com.patient_service.bean.model.PendingRequest;
@@ -13,6 +14,8 @@ import com.patient_service.bean.response.ListActiveConsents;
 import com.patient_service.service.serviceinteface.GetActiveConsentService;
 import com.patient_service.service.serviceinteface.GetConsnetLogsService;
 import com.patient_service.service.serviceinteface.VoluntaryConsentSevice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,7 @@ import static java.util.Objects.isNull;
 @RequestMapping("/api/v1/cms")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 public class CMSController {
+    Logger logger= LoggerFactory.getLogger(PatientServiceApplication.class);
     private final VoluntaryConsentSevice voluntaryConsentService;
     private final ConsentService consentService;
     private final GetActiveConsentService getActiveConsentService;
