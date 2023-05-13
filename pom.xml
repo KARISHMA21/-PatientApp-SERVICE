@@ -122,6 +122,8 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>patient_service</finalName>
+
     </build>
 
 </project>

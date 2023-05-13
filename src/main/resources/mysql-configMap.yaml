@@ -1,0 +1,9 @@
+apiVersion : v1
+kind : ConfigMap
+metadata:
+  name : db-config-patient
+data:
+  host : mysql-patient
+  dbName: patient_schema
+  admin: http://10.108.163.22:8082
+  cms: http://10.111.65.205:8084

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patient-end-deployment
+spec:
+  selector:
+    matchLabels:
+      app: patient-schema-mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: patient-schema-mysql
+    spec:
+      containers:
+        - name: patient-service
+          image: patient-service:1.0
+          ports:
+            - containerPort: 8081
+          env:   # Setting Enviornmental Variables
+            - name: CMS   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-patient
+                  key: cms
+                  
+            - name: ADMIN   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config-patient
+                  key: admin
+                  
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config-patient
+                  key :  host
+
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom :
+                configMapKeyRef :
+                  name : db-config-patient
+                  key :  dbName
+
+            - name: DB_USERNAME  # Setting Database username from Secret
+              valueFrom :
+                secretKeyRef :
+                  name : mysql-secrets
+                  key :  username
+
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom :
+                secretKeyRef :
+                  name : mysql-secrets
+                  key :  password
+
+#         
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: patient-backend-service
+spec:
+  selector:
+    app: patient-schema-mysql
+  ports:
+    - protocol: "TCP"
+      port: 8081 # The port that the service is running on in the cluster
+      targetPort: 8081 # The port exposed by the service
+  type: NodePort # type of the service.
+

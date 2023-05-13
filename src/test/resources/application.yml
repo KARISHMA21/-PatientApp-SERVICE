@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/patient_schema
+    username: root
+    password: root
+    hikari:
+      initialization-fail-timeout: 0
+
+  application:
+    name: patient_end
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+
+server:
+  port: 8081
+  servlet:
+    context-path: /patient_end
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+admin_service:
+  base:
+    url: http://localhost:8082/admin_end
+
+cms_service:
+  base:
+    url: http://localhost:8084/cms_end
+
+patient:
+  client:
+    id: patientclient1234
+    secret: patientsecret
+admin:
+  client:
+    id: adminclient1234
+    secret: adminsecret
+
+hospital:
+  emailId: testaccmt2022@gmail.com
+  password: sbiehxkkvdshixub
+
+his:
+  client:
+    aeskey: 26452948404D635166546A576E5A7234
