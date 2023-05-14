@@ -3,56 +3,41 @@
   hosts: all
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  pre_tasks:
-
-    - name: check the status of minikube.
-      command: minikube status
-      register: minikube_status
-      changed_when: false
-      ignore_errors: true
-
-    - name: start minikube if it's not running.
-      command: minikube start --vm = true
-      when: "not minikube_status.stdout or 'Running' not in minikube_status.stdout"
+  
   tasks:
       - name: Starting minikube
         shell: minikube start
-      - name: build image if it's not already built. 
+      - name: Pull his service. 
         shell: | 
           eval $(minikube docker-env)
           docker pull prarthanaus0597/his-service:1.0
-       
-#     - name: Pull image
-#       docker_image:
-#         name: prarthanaus0597/cms-service:1.0
-#         source: pull
-#     - name: Pull image
-#       docker_image:
-#         name: prarthanaus0597/admin-service:1.0
-#         source: pull
+      - name: Pull cms service. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker pull prarthanaus0597/cms-service:1.0
 
-#     - name: Pull image
-#       docker_image:
-#         name: prarthanaus0597/his-service:1.0
-#         source: pull
+      - name: Pull cms service. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker pull prarthanaus0597/admin-service:1.0
+          
+      - name: Pull patient service. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker pull prarthanaus0597/patient-service:1.0
+          
+      - name: Pull his front end. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker pull prarthanaus0597/his-frontend-k8s:1.0
+            
+      - name: Pull patient front end. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker pull prarthanaus0597/patient-frontend-k8s:1.0
+ 
 
-#     - name: Pull image
-#       docker_image:
-#         name: prarthanaus0597/patient-service:1.0
-#         source: pull
 
-#     - name: Pull image
-#       docker_image:
-#         name: prarthanaus0597/his-frontend-k8s:1.0
-#         source: pull
-
-#     - name: Pull image
-#       docker_image:
-#         name: prarthanaus0597/patient-frontend-k8s:1.0
-#         source: pull
-
-#     - name: Setup docker env
-#       shell: eval $(minikube docker-env)
 
    
 
