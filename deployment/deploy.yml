@@ -17,10 +17,10 @@
   tasks:
       - name: Starting minikube
         shell: minikube start
-       - name: build image if it's not already built. 
-      shell: | 
-        eval $(minikube docker-env)
-        docker pull prarthanaus0597/his-service:1.0
+      - name: build image if it's not already built. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker pull prarthanaus0597/his-service:1.0
       when: not image_hash.stdout
 #     - name: Pull image
 #       docker_image:
