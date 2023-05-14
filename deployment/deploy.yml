@@ -6,31 +6,31 @@
   tasks:
     - name: Pull image
       docker_image:
-        name: prarthanaus0597/cms-service:1.0
+        name: prarthanaus0597/cms-service:latest
         source: pull
     - name: Pull image
       docker_image:
-        name: prarthanaus0597/admin-service:1.0
-        source: pull
-
-    - name: Pull image
-      docker_image:
-        name: prarthanaus0597/his-service:1.0
+        name: prarthanaus0597/admin-service:latest
         source: pull
 
     - name: Pull image
       docker_image:
-        name: prarthanaus0597/patient-service:1.0
+        name: prarthanaus0597/his-service:latest
         source: pull
 
     - name: Pull image
       docker_image:
-        name: prarthanaus0597/his-frontend-k8s:1.0
+        name: prarthanaus0597/patient-service:latest
         source: pull
 
     - name: Pull image
       docker_image:
-        name: prarthanaus0597/patient-frontend-k8s:1.0
+        name: prarthanaus0597/his-frontend-k8s:latest
+        source: pull
+
+    - name: Pull image
+      docker_image:
+        name: prarthanaus0597/patient-frontend-k8s:latest
         source: pull
 
     - name: Setup docker env
