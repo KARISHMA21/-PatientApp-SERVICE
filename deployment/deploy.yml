@@ -21,7 +21,7 @@
         shell: | 
           eval $(minikube docker-env)
           docker pull prarthanaus0597/his-service:1.0
-      when: not image_hash.stdout
+        when: not image_hash.stdout
 #     - name: Pull image
 #       docker_image:
 #         name: prarthanaus0597/cms-service:1.0
