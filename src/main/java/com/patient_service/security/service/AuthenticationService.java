@@ -55,10 +55,10 @@ public class AuthenticationService {
 //            throw new RuntimeException("Incorrect Credentials");
 //        else
 //            System.out.println("Valid Credentials ... Generating Token ");
-        var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+        var jwtToken = jwtService.generateToken(user);
         tokenRepository.deleteTokenByExpiredAndRevoked();
+        saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .pid(user.getPid())
@@ -76,7 +76,6 @@ public class AuthenticationService {
                 .build();
 
         tokenRepository.save(token);
-
 
 
     }

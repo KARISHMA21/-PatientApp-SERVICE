@@ -16,24 +16,24 @@
         <appender name="CUSTOM_LOG"
                   class="ch.qos.logback.core.rolling.RollingFileAppender">
 <!--            <file>/var/log/myapp.log</file>-->
-            <file>/home/karishma/Documents/SPE-MedWeb/MedWebApp.log</file>
+            <file>./MedWebApp.log</file>
             <encoder>
 <!--                <pattern>%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
                 <pattern>%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>/home/karishma/Documents/SPE-MedWeb/MedWebApp-%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>./MedWebApp-%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
         </appender>
         <appender name="SERVER_LOG"
                   class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/home/karishma/Documents/SPE-MedWeb/server.log</file>
+            <file>./server.log</file>
             <encoder>
                 <pattern>%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>/home/karishma/Documents/SPE-MedWeb/server-%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>./server-%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
         </appender>
