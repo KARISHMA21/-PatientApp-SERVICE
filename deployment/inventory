@@ -1,1 +1,1 @@
-localhost ansible_user=prarthana
+172.16.202.15 ansible_user=iiitb
