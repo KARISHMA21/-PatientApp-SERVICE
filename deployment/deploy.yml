@@ -47,12 +47,7 @@
           docker pull prarthanaus0597/patient-frontend-k8s:1.0
           docker tag prarthanaus0597/patient-frontend-k8s:1.0 patient-frontend-k8s:1.0
           docker rmi prarthanaus0597/patient-frontend-k8s:1.0
-          
-      - name: Delete all the none named images. 
-        shell: | 
-          eval $(minikube docker-env)
-          docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi {}
-          
+           
       - name: Run kubectl commands for yml files of HIS Backend
         shell: | 
           eval $(minikube docker-env)
@@ -101,8 +96,13 @@
           eval $(minikube docker-env)
           cd HIS/frontend/
           kubectl apply -f his-frontend-app.yaml
-          kubectl apply -f his-app-ingress.yaml 
+          kubectl apply -f his-app-ingress.yaml
           
+      - name: Delete all the none named images. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi {}
+                   
  
 
 
