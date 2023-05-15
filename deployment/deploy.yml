@@ -88,7 +88,7 @@
         shell: | 
           eval $(minikube docker-env)
           cd Patient/frontend/
-          kubectl apply -f patient-frontend-app..yaml
+          kubectl apply -f patient-frontend-app.yaml
           kubectl apply -f patient-app-ingress.yaml 
         
       - name: Run kubectl commands for yml files of HIS Frontend
