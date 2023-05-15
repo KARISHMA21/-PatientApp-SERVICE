@@ -20,7 +20,7 @@
           docker tag prarthanaus0597/cms-service:1.0 cms-service:1.0
           docker rmi prarthanaus0597/cms-service:1.0
 
-      - name: Pull cms service. 
+      - name: Pull admin service. 
         shell: | 
           eval $(minikube docker-env)
           docker pull prarthanaus0597/admin-service:1.0
@@ -47,6 +47,13 @@
           docker pull prarthanaus0597/patient-frontend-k8s:1.0
           docker tag prarthanaus0597/patient-frontend-k8s:1.0 patient-frontend-k8s:1.0
           docker rmi prarthanaus0597/patient-frontend-k8s:1.0
+          
+      - name: Delete all the none named images. 
+        shell: | 
+          eval $(minikube docker-env)
+          docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi {}
+
+         
  
 
 
