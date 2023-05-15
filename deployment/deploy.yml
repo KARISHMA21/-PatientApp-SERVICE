@@ -101,7 +101,7 @@
       - name: Delete all the none named images. 
         shell: | 
           eval $(minikube docker-env)
-          docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi {}
+          docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi -f {}
                    
  
 
