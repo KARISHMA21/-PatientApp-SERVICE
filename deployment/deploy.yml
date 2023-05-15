@@ -98,10 +98,10 @@
           kubectl apply -f his-frontend-app.yaml
           kubectl apply -f his-app-ingress.yaml
           
-      - name: Delete all the none named images. 
-        shell: | 
-          eval $(minikube docker-env)
-          docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi -f {}
+#       - name: Delete all the none named images. 
+#         shell: | 
+#           eval $(minikube docker-env)
+#           docker images | awk '$1 == "<none>" {print $3}' | xargs -I {} docker rmi -f {}
                    
  
 
