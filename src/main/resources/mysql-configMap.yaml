@@ -5,5 +5,5 @@ metadata:
 data:
   host : mysql-patient
   dbName: patient_schema
-  admin: http://10.102.122.31:8082
-  cms: http://10.98.238.82:8084
+  admin: http://localhost:8082
+  cms: http://localhost:8084
