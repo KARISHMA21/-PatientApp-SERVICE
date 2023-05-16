@@ -1,0 +1,85 @@
+pipeline {
+  agent any
+  environment {
+    // DOCKER_REGISTRY = "docker.io"
+    DOCKER_HUB_REPO = "prarthanaus0597"
+    registryCredential = 'dockerCred'
+    REACT_GITHUB_REPO = "https://github.com/KARISHMA21/SPE-PatientApp-FRONTEND"
+    SPRING_BOOT_GITHUB_REPO = "https://github.com/KARISHMA21/SPE-PatientApp-SERVICE"
+  }
+  stages {
+     stage('Git Clone') {
+      steps {
+          dir('SPE-PatientApp-SERVICE'){
+        git branch: 'master', url: SPRING_BOOT_GITHUB_REPO,credentialsId: 'gitcred'
+        
+          }
+          dir('SPE-PatientApp-FRONTEND') {
+        git branch: 'master', url: REACT_GITHUB_REPO,credentialsId: 'gitcred'
+          }
+      }
+    } 
+    
+    
+    stage('Build and Push Spring Boot Image') {
+      steps {
+        dir('SPE-PatientApp-SERVICE') {
+            sh 'mvn clean install -Dmaven.test.skip=true'    
+             script {
+                patientservicedockerImage = docker.build DOCKER_HUB_REPO + "/patient-service:1.0"
+                docker.withRegistry( '', registryCredential ) {
+                patientservicedockerImage.push()
+        }
+          }
+        }
+      }
+    }
+    
+    
+    stage('Build and Push React Image') {
+      steps {
+        dir('SPE-PatientApp-FRONTEND') {
+        //   sh 'docker build -t ${DOCKER_REGISTRY}/${DOCKER_HUB_REPO}/patientapp .'
+        //   withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
+        //     sh 'docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD ${DOCKER_REGISTRY}'
+        //     sh 'docker push ${DOCKER_REGISTRY}/${DOCKER_HUB_REPO}/react-app'
+          script {
+                patientservicedockerImage = docker.build DOCKER_HUB_REPO + "/patient-frontend-k8s:1.0"
+                docker.withRegistry( '', registryCredential ) {
+                patientservicedockerImage.push()
+        }
+          }
+          }
+        }
+      }
+    
+    stage('Copy yml files to client') {
+      steps{
+          sshagent(['ansible_deployment']) {
+            sh 'ssh -o StrictHostKeyChecking=no iiitb@172.16.202.15'
+            sh 'scp /var/lib/jenkins/workspace/MedWeb-CentralServices/SPE-ADMIN-SERVICE/src/main/resources/* iiitb@172.16.202.15:/home/iiitb/Central/admin/'
+            sh 'scp /var/lib/jenkins/workspace/MedWeb-CentralServices/SPE-CMS-SERVICE/src/main/resources/* iiitb@172.16.202.15:/home/iiitb/Central/cms/'
+            sh 'scp /var/lib/jenkins/workspace/MedWeb-HISApp/SPE-HISApp-FRONTEND/*.yaml iiitb@172.16.202.15:/home/iiitb/HIS/frontend/'
+            sh 'scp /var/lib/jenkins/workspace/MedWeb-HISApp/SPE-HISApp-SERVICE/src/main/resources/* iiitb@172.16.202.15:/home/iiitb/HIS/backend/'
+            sh 'scp /var/lib/jenkins/workspace/MedWeb-PatientApp/SPE-PatientApp-FRONTEND/*.yaml iiitb@172.16.202.15:/home/iiitb/Patient/frontend/'
+            sh 'scp /var/lib/jenkins/workspace/MedWeb-PatientApp/SPE-PatientApp-SERVICE/src/main/resources/* iiitb@172.16.202.15:/home/iiitb/Patient/backend/'
+        }
+      }
+      }
+     stage('Ansible Deployment') {
+            steps{
+                 sshagent(['ansible_deployment']) {
+                ansiblePlaybook becomeUser: null, 
+                installation: 'Ansible', 
+                credentialsId: 'docker',
+                disableHostKeyChecking: false, 
+                inventory: 'SPE-PatientApp-SERVICE/deployment/inventory', 
+                playbook: 'SPE-PatientApp-SERVICE/deployment/deploy.yml', 
+                sudoUser: null  
+                 }
+            }          
+        }   
+      
+      
+}
+}
