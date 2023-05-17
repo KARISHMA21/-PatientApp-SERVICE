@@ -1,8 +1,8 @@
 package com.patient_service.controller;
 
-import com.patient_service.PatientServiceApplication;
 import com.patient_service.bean.model.PasswordResetRequest;
 import com.patient_service.bean.model.PatientReg;
+import com.patient_service.security.contoller.AuthenticationController;
 import com.patient_service.security.model.AuthenticationRequest;
 import com.patient_service.security.response.AuthenticationResponse;
 import com.patient_service.service.serviceinteface.PatientAccountService;
@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/patient")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 public class PatientController {
-    Logger logger= LoggerFactory.getLogger(PatientServiceApplication.class);
+
+    private static final Logger CUSTOM_LOGGER = LoggerFactory.getLogger("CustomLogger");
+
     PatientAccountService accountService;
 
 
@@ -30,9 +32,11 @@ public class PatientController {
         try {
 
             accountService.addCredentials(patient);
+            CUSTOM_LOGGER.info("[CreateAccount] "+"["+patient.getPid()+"]"+" "+"PatientService"+" "+"\"\"");
             return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
         } catch (Exception e) {
             System.out.println(e);
+            CUSTOM_LOGGER.error("[CreateAccount] "+"["+patient.getPid()+"]"+" "+"PatientService"+" "+"\""+e.getMessage()+"\"");
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
         }
 

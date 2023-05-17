@@ -1,10 +1,10 @@
 package com.patient_service.controller;
 
-import com.patient_service.PatientServiceApplication;
 import com.patient_service.bean.model.ListFinalRecord;
 import com.patient_service.bean.model.MinorAccounts;
 import com.patient_service.bean.model.UpdatedProfile;
 import com.patient_service.bean.response.PatientDemographicsResponse;
+import com.patient_service.security.contoller.AuthenticationController;
 import com.patient_service.service.serviceinteface.GetMedicalRecordsService;
 
 import com.patient_service.service.serviceinteface.GetMinorsService;
@@ -24,7 +24,8 @@ import java.util.List;
 @RequestMapping("/api/v1/admin")
 @CrossOrigin(origins = "*",allowedHeaders = "*")
 public class AdminController {
-    Logger logger= LoggerFactory.getLogger(PatientServiceApplication.class);
+    Logger logger= LoggerFactory.getLogger(AuthenticationController.class);
+    private static final Logger CUSTOM_LOGGER = LoggerFactory.getLogger("CustomLogger");
     GetMedicalRecordsService getMedicalRecordsService;
     GetMinorsService getMinorsService;
 
@@ -40,10 +41,14 @@ public class AdminController {
     }
 
     @CrossOrigin(origins = "*",allowedHeaders = "*")
-@GetMapping ("/get-medical-records/{pid}")
+    @GetMapping ("/get-medical-records/{pid}")
     public ResponseEntity<ListFinalRecord> getEntityById(@PathVariable String pid ) {
 
         ResponseEntity<ListFinalRecord> medicalRecordResponse=getMedicalRecordsService.getMedicalRecords(pid);
+
+        CUSTOM_LOGGER.info("[GetMedicalRecords] "+"["+pid+"]"+" "+"CMSService"+" "+"\"\"");
+        CUSTOM_LOGGER.info("[GetMedicalRecords] "+"["+pid+"]"+" "+"AdminService"+" "+"\"\"");
+        CUSTOM_LOGGER.info("[GetMedicalRecords] "+"["+pid+"]"+" "+"HISService"+" "+"\"\"");
 
         return ResponseEntity.ok().body(medicalRecordResponse.getBody());
     }
@@ -51,6 +56,8 @@ public class AdminController {
     @GetMapping ("/get-minor-accounts/{pid}")
     public ResponseEntity<List<MinorAccounts>> getMinors(@PathVariable String pid ) {
 
+        CUSTOM_LOGGER.info("[SwitchAccount] "+"["+pid+"]"+" "+"AdminService"+" "+"\"\"");
+        CUSTOM_LOGGER.info("[GetMedicalRecords] "+"["+pid+"]"+" "+"PatientService"+" "+"\"\"");
         ResponseEntity<List<MinorAccounts>> minoraccounts=getMinorsService.getMinorAccounts(pid);
 
         return ResponseEntity.ok().body(minoraccounts.getBody());
@@ -61,7 +68,8 @@ public class AdminController {
 
         System.out.println("========================== PID : "+pid+"==========================");
         PatientDemographicsResponse PatientDemoDetail = PatientProfileSvc.getPatientDemographics(pid);
-
+        CUSTOM_LOGGER.info("[ProfileDetails] "+"["+pid+"]"+" "+"AdminService"+" "+"\"\"");
+        CUSTOM_LOGGER.info("[ProfileDetails] "+"["+pid+"]"+" "+"PatientService"+" "+"\"\"");
         System.out.println("Patient profile details"+PatientDemoDetail.toString());
         return ResponseEntity.status(HttpStatus.OK).body(PatientDemoDetail);
     }
@@ -74,6 +82,8 @@ public class AdminController {
         UpdatedProfile response=new UpdatedProfile();
         response =PatientProfileSvc.updateDemographicsinAdminDB(patientprofile);
         System.out.println("Sending Response "+response.getPid());
+        CUSTOM_LOGGER.info("[ProfileDetails] "+"["+patientprofile.getPid()+"]"+" "+"AdminService"+" "+"\"\"");
+        CUSTOM_LOGGER.info("[ProfileDetails] "+"["+patientprofile.getPid()+"]"+" "+"PatientService"+" "+"\"\"");
         return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
 
 //        return 5 ;
