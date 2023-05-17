@@ -1,6 +1,5 @@
 package com.patient_service.security.contoller;
 
-
 import com.patient_service.bean.model.PasswordResetRequest;
 import com.patient_service.security.model.AuthenticationRequest;
 import com.patient_service.security.response.AuthenticationResponse;
@@ -9,6 +8,7 @@ import com.patient_service.security.service.LogoutService;
 import com.patient_service.security.service.JwtService;
 import com.patient_service.service.serviceinteface.OTPservice;
 import com.patient_service.service.serviceinteface.PatientAccountService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class AuthenticationController {
     private final LogoutService logoutService;
 
 
-//    @PostMapping("/register")
+    //    @PostMapping("/register")
 //    public ResponseEntity<AuthenticationResponse> register(
 //            @RequestBody RegisterRequest request
 //    ) {
@@ -57,11 +57,11 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         try {
 //            logger.info("[Log in] "+request.getUsername());
-            CUSTOM_LOGGER.info("[Log in] "+request.getUsername());
+            CUSTOM_LOGGER.info("[Login] "+"["+request.getUsername()+"]"+" "+"PatientService"+" "+"\"\"");
             return ResponseEntity.ok(service.authenticate(request));
         }
         catch (Exception e){
-            CUSTOM_LOGGER.error("[Log in] "+e.getMessage());
+            CUSTOM_LOGGER.error("[Login] "+"["+request.getUsername()+"]"+" "+"PatientService"+" "+"\""+e.getMessage()+"\"");
             return ResponseEntity.status(403).build();
         }
     }
@@ -71,10 +71,15 @@ public class AuthenticationController {
             System.out.println(headers);
             logoutService.logout(headers);
 
+
+            // String pid=jwtService.extractClaim(headers.get("Authorization").get(0),Claims::getSubject);
+            CUSTOM_LOGGER.info("[LogOut] "+"[NA]"+" "+"PatientService"+" "+"\"\"");
             return ResponseEntity.ok().build();
         }
         catch (Exception e){
             System.out.println(e);
+            CUSTOM_LOGGER.error("[LogOut] "+"[NA]"+" "+"PatientService"+" "+"\""+e.getMessage()+"\"");
+
             return ResponseEntity.status(403).build();
         }
     }
@@ -85,15 +90,20 @@ public class AuthenticationController {
         if(adminClientId.equals(authRequest.getUsername()) && adminClientSecret.equals(authRequest.getPassword())){
             String token=jwtService.createToken(adminClientId);
             System.out.println(token);
+            CUSTOM_LOGGER.info("[AdminService] "+"["+authRequest.getUsername()+"]"+" "+"AdminService"+"\"\"");
             return ResponseEntity.ok(token);
         }
-
+//        CUSTOM_LOGGER.error("[Admin Service] "+authRequest.getUsername());
         ResponseEntity<String> resp=new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+//        CUSTOM_LOGGER.error("[Admin Service] "+authRequest.getUsername()+""+resp.getBody());
+        CUSTOM_LOGGER.error("[AdminService] "+"["+authRequest.getUsername()+"]"+" "+"AdminService"+" "+"\""+resp.getBody()+"\"");
         return resp;
     }
 
     @PostMapping("/password-reset")
     public ResponseEntity authenticatepwdresetrequest(@RequestBody PasswordResetRequest pwdresetrequest) {
+        CUSTOM_LOGGER.info("[PasswordReset] "+"["+pwdresetrequest.getPid()+"]"+" "+"PatientService"+"\"\"");
+
         try {
             System.out.println("authenticatepwdResetRequest validated "+pwdresetrequest.getPhone()+" "+pwdresetrequest.getPid()+pwdresetrequest.getOtp());
 
@@ -114,6 +124,8 @@ public class AuthenticationController {
             else
             {
                 System.out.println("Account not found");
+//                CUSTOM_LOGGER.error("[Password Reset] "+" Account not found");
+                CUSTOM_LOGGER.error("[PasswordReset] "+"["+pwdresetrequest.getPid()+"]"+" "+"PatientService"+" "+"\"Account not found\"");
                 return ResponseEntity.status(403).build();
             }
 
@@ -121,6 +133,8 @@ public class AuthenticationController {
 
         }
         catch (Exception e){
+            CUSTOM_LOGGER.error("[PasswordReset] "+"["+pwdresetrequest.getPid()+"]"+" "+"PatientService"+" "+"\""+e.getMessage()+"\"");
+
             return ResponseEntity.status(403).build();
         }
     }
@@ -129,20 +143,24 @@ public class AuthenticationController {
     public ResponseEntity validateOTP(@RequestBody PasswordResetRequest enteredOTP) {
         try {
             boolean status=OTPsvc.verifyOtp(String.valueOf(enteredOTP.getPhone()),enteredOTP.getOtp());
-        if(status==true)
-        {
-            System.out.println("OTP Validation Successful");
-            return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
-        }
-        else
-        {
-            System.out.println("OTP Validation Failed");
-            return ResponseEntity.status(403).build();
-        }
+            if(status==true)
+            {
+                System.out.println("OTP Validation Successful");
+                return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
+            }
+            else
+            {
+                System.out.println("OTP Validation Failed");
+
+                CUSTOM_LOGGER.error("[PasswordReset] "+"["+enteredOTP.getPid()+"]"+" "+"PatientService"+" "+"\"OTP Validation Failed\"");
+
+                return ResponseEntity.status(403).build();
+            }
 
 
         }
         catch (Exception e){
+            CUSTOM_LOGGER.error("[PasswordReset] "+"["+enteredOTP.getPid()+"]"+" "+"PatientService"+" "+"\""+e.getMessage()+"\"");
             return ResponseEntity.status(403).build();
         }
     }
@@ -155,14 +173,19 @@ public class AuthenticationController {
 
             int status=accountService.updatePassword(newpassword);
 
-                System.out.println("Password Update Successful");
-                return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
+            System.out.println("Password Update Successful");
+//            CUSTOM_LOGGER.info("[Password Reset] "+newpassword.getPid()+" Success");
+            CUSTOM_LOGGER.info("[PasswordReset] "+"["+newpassword.getPid()+"]"+" "+"PatientService"+" "+"\"Success\"");
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(200)).build();
 
 
 
         }
         catch (Exception e){
             System.out.println("Passoword update failed");
+            CUSTOM_LOGGER.error("[PasswordReset] "+"["+newpassword.getPid()+"]"+" "+"PatientService"+" "+"\"Passoword update failed\"");
+
             return ResponseEntity.status(403).build();
         }
     }
